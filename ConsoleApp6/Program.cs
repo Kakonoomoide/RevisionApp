@@ -109,6 +109,7 @@ namespace ConsoleApp6
                                                         if (int.TryParse(input, out JumlahBerat))
                                                         {
                                                             break;
+
                                                         }
                                                         else
                                                         {
@@ -170,22 +171,29 @@ namespace ConsoleApp6
                                                     Console.WriteLine("\n<---Update Data barang--->");
                                                     Console.WriteLine("Masukkan ID log data barang yang akan diperbarui:");
                                                     string newID_log = Console.ReadLine();
-                                                    Console.WriteLine("Masukkan Jumlah berat baru:");
-                                                    string newJumlahBerat = Console.ReadLine();
-                                                    Console.WriteLine("masukkan tanggal dan waktu yang baru:");
-                                                    string newTanggal = Console.ReadLine();
+                                                    pr.READselecteddatabarang(newID_log, conn);
                                                     try
                                                     {
-                                                        pr.READselecteddatabarang(newID_log, conn);
-                                                        Console.WriteLine("Ketik Y/y untuk update data di atas data ketik N/n untuk cancel");
+                                                        Console.WriteLine("Ketik Y/y untuk update data dan ketik N/n untuk cancel");
                                                         char Vdb = Convert.ToChar(Console.ReadLine());
 
                                                         switch (Vdb)
                                                         {
                                                             case 'y':
                                                             case 'Y':
-                                                                pr.updatedatabarang(newID_log, newJumlahBerat, newTanggal, conn);
-                                                                Console.WriteLine("Data dengan id " + newID_log + " Berhasil di update");
+                                                                Console.WriteLine("Masukkan Jumlah berat baru (kosongkan jika tidak ingin mengubah):");
+                                                                string newJumlahBerat = Console.ReadLine();
+                                                                Console.WriteLine("masukkan tanggal dan waktu yang baru(kosongkan jika tidak ingin mengubah):");
+                                                                string newTanggal = Console.ReadLine();
+                                                                if (!string.IsNullOrEmpty(newJumlahBerat) || !string.IsNullOrEmpty(newTanggal))
+                                                                {
+                                                                    pr.updatedatabarang(newID_log, newJumlahBerat, newTanggal, conn);
+                                                                    Console.WriteLine("Data dengan id " + newID_log + " Berhasil di update");
+                                                                }
+                                                                else
+                                                                {
+                                                                    Console.WriteLine("Tidak ada data baru yang dimasukkan. Data tetap tidak berubah.");
+                                                                }
                                                                 break;
                                                             case 'n':
                                                             case 'N':
@@ -222,106 +230,197 @@ namespace ConsoleApp6
                             /*Data Transaksi*/
                             case '2':
                                 {
-                                    Console.WriteLine("\n<---Data Transaksi--->");
-                                    Console.WriteLine("1. Melihat data Transaksi");
-                                    Console.WriteLine("2. Tambah data Transaksi");
-                                    Console.WriteLine("3. Hapus data Transaksi");
-                                    Console.WriteLine("4. Update data Transaksi");
-                                    Console.WriteLine("5. exit");
-                                    Console.WriteLine("\n enter your choice (1-5): ");
-                                    char chT = Convert.ToChar(Console.ReadLine());
-
-                                    switch (chT)
+                                    bool backToMenuTransaksi = false;
+                                    while (!backToMenuTransaksi)
                                     {
-                                        /* read */
-                                        case '1':
-                                            {
+                                        Console.WriteLine("\n<---Data Transaksi--->");
+                                        Console.WriteLine("1. Melihat data Transaksi");
+                                        Console.WriteLine("2. Tambah data Transaksi");
+                                        Console.WriteLine("3. Hapus data Transaksi");
+                                        Console.WriteLine("4. Update data Transaksi");
+                                        Console.WriteLine("5. exit");
+                                        Console.WriteLine("\n enter your choice (1-5): ");
+                                        char chT = Convert.ToChar(Console.ReadLine());
+
+                                        switch (chT)
+                                        {
+                                            /* read */
+                                            case '1':
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("<-><->Berikut data transaksi>-<>-<");
+                                                    Console.WriteLine();
+                                                    pr.READtransaksi(conn);
+                                                }
+                                                break;
+
+                                            /* create */
+                                            case '2':
+                                                {
+                                                    Console.Clear();
+                                                    string jumlahBerat, TotalTransaksi, ID_pb, ID_sd;
+                                                    while (true)
+                                                    {
+                                                        pr.READpadiberas(conn);
+                                                        Console.WriteLine("masukkan ID padi/beras:");
+                                                        ID_pb = Console.ReadLine();
+                                                        if (!string.IsNullOrWhiteSpace(ID_pb) && pr.isValidIdPadiBeras(ID_pb, conn))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("ID padi/beras tidak valid. Silakan coba lagi.");
+                                                        }
+                                                    }
+                                                    while (true)
+                                                    {
+                                                        pr.READsuplierdist(conn);
+                                                        Console.WriteLine("masukkan ID suplier/ distributor:");
+                                                        ID_sd = Console.ReadLine();
+                                                        if (!string.IsNullOrWhiteSpace(ID_sd))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("ID suplier/ distributor tidak boleh kosong. Silakan coba lagi.");
+                                                        }
+                                                    }
+                                                    while (true)
+                                                    {
+                                                        Console.WriteLine("masukkan jumlah beras:");
+                                                        jumlahBerat = Console.ReadLine();
+                                                        if (!string.IsNullOrWhiteSpace(jumlahBerat) && int.TryParse(jumlahBerat, out _))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Jumlah beras harus berupa angka bulat. Silakan coba lagi.");
+                                                        }
+                                                    }
+
+                                                    while (true)
+                                                    {
+                                                        Console.WriteLine("masukkan total transaksi Rp- ");
+                                                        TotalTransaksi = Console.ReadLine();
+                                                        if (!string.IsNullOrWhiteSpace(TotalTransaksi) && decimal.TryParse(TotalTransaksi, out _))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Total transaksi harus berupa nominal uang. Silakan coba lagi.");
+                                                        }
+                                                    }
+                                                    try
+                                                    {
+                                                        pr.insertTransaksi( jumlahBerat, TotalTransaksi, ID_pb, ID_sd, conn);
+                                                    }
+                                                    catch
+                                                    {
+                                                        Console.WriteLine("Anda tidak memiliki akses untuk menambah data.");
+                                                    }
+
+                                                }
+                                                break;
+
+                                            /* delete */
+                                            case '3':
+                                                {
+                                                    Console.Clear();
+                                                    pr.READtransaksi(conn);
+                                                    Console.WriteLine("Masukkan id transaksi yang ingin dihapus: ");
+                                                    string id_Transaksi = Console.ReadLine();
+                                                    try
+                                                    {
+                                                        pr.READselectedTransaksi(id_Transaksi, conn);
+                                                        Console.WriteLine("Ketik Y/y untuk hapus data, ketik N/n untuk membatalkan.");
+                                                        char Vdb = Convert.ToChar(Console.ReadLine());
+
+                                                        switch (char.ToUpper(Vdb))
+                                                        {
+                                                            case 'y':
+                                                            case 'Y':
+                                                                pr.deleteTransaksi(id_Transaksi, conn);
+                                                                Console.WriteLine("Data dengan id " + id_Transaksi + " berhasil dihapus.");
+                                                                break;
+                                                            case 'n':
+                                                            case 'N':
+                                                                Console.WriteLine("Membatalkan operasi hapus data.");
+                                                                break;
+                                                            default:
+                                                                Console.WriteLine("Pilihan tidak valid.");
+                                                                break;
+                                                        }
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                        Console.WriteLine("\nAnda tidak memiliki akses untuk menghapus data atau data yang Anda masukkan salah.");
+                                                        Console.WriteLine(e.ToString());
+                                                    }
+                                                }
+                                                break;
+
+
+                                            /* update */
+                                            case '4':
+                                                {
+                                                    Console.Clear();
+                                                    pr.READtransaksi(conn);
+                                                    Console.WriteLine("Masukkan ID transaksi yang ingin diperbarui:");
+                                                    string newID_Transaksi = Console.ReadLine();
+
+                                                    // Menampilkan detail transaksi yang akan diperbarui
+                                                    pr.READselectedTransaksi(newID_Transaksi, conn);
+
+                                                    try
+                                                    {
+                                                        Console.WriteLine("Ketik Y/y untuk update data dan ketik N/n untuk cancel");
+                                                        char Vdb = Convert.ToChar(Console.ReadLine());
+
+                                                        switch (char.ToUpper(Vdb))
+                                                        {
+                                                            case 'Y':
+                                                                Console.WriteLine("Masukkan jumlah berat baru (kosongkan jika tidak ingin mengubah):");
+                                                                string newJumlahBerat = Console.ReadLine();
+                                                                Console.WriteLine("Masukkan total harga baru (kosongkan jika tidak ingin mengubah):");
+                                                                string newTotalHarga = Console.ReadLine();
+                                                                
+                                                                pr.updateTransaksi(newID_Transaksi, newJumlahBerat, newTotalHarga, conn);
+                                                                Console.WriteLine($"Data dengan ID transaksi {newID_Transaksi} berhasil diperbarui.");
+                                                                break;
+                                                            case 'N':
+                                                                Console.WriteLine("Membatalkan operasi update data.");
+                                                                break;
+                                                            default:
+                                                                Console.WriteLine("Pilihan tidak valid.");
+                                                                break;
+                                                        }
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        Console.WriteLine("Error: " + ex.Message);
+                                                    }
+                                                }
+                                                break;
+
+
+                                            /* exit */
+                                            case '5':
+                                                conn.Close();
                                                 Console.Clear();
-                                                Console.WriteLine("<-><->Berikut data transaksi>-<>-<");
-                                                Console.WriteLine();
-                                                pr.READtransaksi(conn);
-                                            }
-                                            return;
+                                                Main(new string[0]);
+                                                break;
 
-                                        /* create */
-                                        case '2':
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("masukkan ID transaksi:");
-                                                string id_Transaksi = Console.ReadLine();
-                                                Console.WriteLine("masukkan jumlah beras:");
-                                                string jumlahBerat = Console.ReadLine();
-                                                Console.WriteLine("masukkan total transaksi:");
-                                                string TotalTransaksi = Console.ReadLine();
-                                                Console.WriteLine("masukkan id padi/beras:");
-                                                string ID_pb = Console.ReadLine();
-                                                Console.WriteLine("masukkan Id suplier/ distributor:");
-                                                string ID_sd = Console.ReadLine();
-                                                try
+                                            default:
                                                 {
-                                                    pr.insertTransaksi(id_Transaksi, jumlahBerat, TotalTransaksi, ID_pb, ID_sd, conn);
+                                                    Console.Clear();
+                                                    Console.WriteLine("\n invalid options");
                                                 }
-                                                catch
-                                                {
-                                                    Console.WriteLine("anda tidak memiliki " +
-                                                        "akses untuk menambah data");
-                                                }
-                                            }
-                                            return;
-
-                                        /* delete */
-                                        case '3':
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("untuk hapus masukkan id transaksi:\n");
-                                                string id_Transaksi = Console.ReadLine();
-                                                try
-                                                {
-                                                    pr.deleteTransaksi(id_Transaksi, conn);
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    Console.WriteLine("\nanda tidak memiliki" +
-                                                        "akses untuk menambah data atau data yang anda masukkan salah");
-                                                    Console.WriteLine(e.ToString());
-                                                }
-                                            }
-                                            return;
-
-                                        /* update */
-                                        case '4':
-                                            {
-                                                Console.WriteLine("\n<---Update Transaksi--->");
-                                                Console.WriteLine("masukkan berdasarkan ID transaksi yang akan diperbarui:");
-                                                string newID_Transaksi = Console.ReadLine();
-                                                Console.WriteLine("Masukkan Jumlah berat baru:");
-                                                string newJumlahbrt = Console.ReadLine();
-                                                Console.WriteLine("masukkan Total harga baru:");
-                                                string newTotaltr = Console.ReadLine();
-                                                try
-                                                {
-                                                    pr.updateTransaksi(newID_Transaksi, newJumlahbrt, newTotaltr, conn);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Console.WriteLine("Error: " + ex.Message);
-                                                }
-                                            }
-                                            return;
-
-                                        /* exit */
-                                        case '5':
-                                            conn.Close();
-                                            Console.Clear();
-                                            Main(new string[0]);
-                                            break;
-
-                                        default:
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("\n invalid options");
-                                            }
-                                            break;
+                                                break;
+                                        }
                                     }
                                 }
                                 break;
@@ -330,117 +429,121 @@ namespace ConsoleApp6
                             /*Data Suplier/Distributor*/
                             case '3':
                                 {
-                                    Console.WriteLine("\n<---Data Suplier/Distributor--->");
-                                    Console.WriteLine("1. Melihat data Suplier/Distributor");
-                                    Console.WriteLine("2. Tambah data Suplier/Distributor");
-                                    Console.WriteLine("3. Hapus data Suplier/Distributor");
-                                    Console.WriteLine("4. Update data Suplier/Distributor");
-                                    Console.WriteLine("5. exit");
-                                    Console.WriteLine("\n enter your choice (1-5): ");
-                                    char chSD = Convert.ToChar(Console.ReadLine());
-
-                                    switch (chSD)
+                                    bool backToMenuSuplierDistributor = false;
+                                    while (!backToMenuSuplierDistributor)
                                     {
-                                        /* read */
-                                        case '1':
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("<-><->Berikut data suplier/distributor>-<>-<");
-                                                Console.WriteLine();
-                                                pr.READsuplierdist(conn);
-                                            }
-                                            break;
+                                        Console.WriteLine("\n<---Data Suplier/Distributor--->");
+                                        Console.WriteLine("1. Melihat data Suplier/Distributor");
+                                        Console.WriteLine("2. Tambah data Suplier/Distributor");
+                                        Console.WriteLine("3. Hapus data Suplier/Distributor");
+                                        Console.WriteLine("4. Update data Suplier/Distributor");
+                                        Console.WriteLine("5. exit");
+                                        Console.WriteLine("\n enter your choice (1-5): ");
+                                        char chSD = Convert.ToChar(Console.ReadLine());
 
-                                        /* create */
-                                        case '2':
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("masukkan ID suplier/distributor:");
-                                                string id_s_d = Console.ReadLine();
-                                                Console.WriteLine("masukkan Nama suplier/distributor:");
-                                                string NamaSuplier = Console.ReadLine();
-                                                Console.WriteLine("masukkan Alamat suplier / distributor:");
-                                                string Alamat = Console.ReadLine();
-                                                Console.WriteLine("masukkan No telpon suplier / distributor:");
-                                                string NoTelpon = Console.ReadLine();
-
-                                                bool isUnique = pr.IsDataUnique("Suplier_Distributor", "Nama_Suplier", NamaSuplier, "Alamat", Alamat, conn);
-
-                                                if (isUnique)
+                                        switch (chSD)
+                                        {
+                                            /* read */
+                                            case '1':
                                                 {
-                                                    Console.WriteLine($"Nama suplier '{NamaSuplier}' belum ada di dalam tabel.");
+                                                    Console.Clear();
+                                                    Console.WriteLine("<-><->Berikut data suplier/distributor>-<>-<");
+                                                    Console.WriteLine();
+                                                    pr.READsuplierdist(conn);
+                                                }
+                                                break;
+
+                                            /* create */
+                                            case '2':
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("masukkan ID suplier/distributor:");
+                                                    string id_s_d = Console.ReadLine();
+                                                    Console.WriteLine("masukkan Nama suplier/distributor:");
+                                                    string NamaSuplier = Console.ReadLine();
+                                                    Console.WriteLine("masukkan Alamat suplier / distributor:");
+                                                    string Alamat = Console.ReadLine();
+                                                    Console.WriteLine("masukkan No telpon suplier / distributor:");
+                                                    string NoTelpon = Console.ReadLine();
+
+                                                    bool isUnique = pr.IsDataUnique2("Suplier_Distributor", "Nama_Suplier", NamaSuplier, "Alamat", Alamat, conn);
+
+                                                    if (isUnique)
+                                                    {
+                                                        Console.WriteLine($"Nama suplier '{NamaSuplier}' belum ada di dalam tabel.");
+                                                        try
+                                                        {
+                                                            pr.insertsuplierdist(id_s_d, NamaSuplier, Alamat, NoTelpon, conn);
+                                                        }
+                                                        catch (Exception ex)
+                                                        {
+                                                            Console.WriteLine("Error: " + ex.Message);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine($"Nama suplier '{NamaSuplier}' sudah ada di dalam tabel.");
+                                                    }
+
+                                                }
+                                                break;
+
+                                            /* delete */
+                                            case '3':
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("hapus data berdasarkan id suplier/ distributor:\n");
+                                                    string id_s_d = Console.ReadLine();
                                                     try
                                                     {
-                                                        pr.insertsuplierdist(id_s_d, NamaSuplier, Alamat, NoTelpon, conn);
+                                                        pr.deletesuplierdist(id_s_d, conn);
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                        Console.WriteLine("\nanda tidak memiliki" +
+                                                            "akses untuk menambah data atau data yang anda masukkan salah");
+                                                        Console.WriteLine(e.ToString());
+                                                    }
+                                                }
+                                                break;
+
+                                            /* update */
+                                            case '4':
+                                                {
+                                                    Console.WriteLine("\n<---Update suplier distributor--->");
+                                                    Console.WriteLine("masukkan ID suplier/distributor yang akan di perbarui:");
+                                                    string id_s_d = Console.ReadLine();
+                                                    Console.WriteLine("masukkan Nama suplier/distributor:");
+                                                    string newNamaSuplier = Console.ReadLine();
+                                                    Console.WriteLine("masukkan Alamat suplier / distributor:");
+                                                    string newAlamat = Console.ReadLine();
+                                                    Console.WriteLine("masukkan No telpon suplier / distributor:");
+                                                    string newNoTelpon = Console.ReadLine();
+                                                    try
+                                                    {
+                                                        pr.updatesuplierdist(id_s_d, newNamaSuplier, newAlamat, newNoTelpon, conn);
                                                     }
                                                     catch (Exception ex)
                                                     {
                                                         Console.WriteLine("Error: " + ex.Message);
                                                     }
                                                 }
-                                                else
-                                                {
-                                                    Console.WriteLine($"Nama suplier '{NamaSuplier}' sudah ada di dalam tabel.");
-                                                }
+                                                break;
 
-                                            }
-                                            break;
-
-                                        /* delete */
-                                        case '3':
-                                            {
+                                            /* exit */
+                                            case '5':
+                                                conn.Close();
                                                 Console.Clear();
-                                                Console.WriteLine("hapus data berdasarkan id suplier/ distributor:\n");
-                                                string id_s_d = Console.ReadLine();
-                                                try
-                                                {
-                                                    pr.deletesuplierdist(id_s_d, conn);
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    Console.WriteLine("\nanda tidak memiliki" +
-                                                        "akses untuk menambah data atau data yang anda masukkan salah");
-                                                    Console.WriteLine(e.ToString());
-                                                }
-                                            }
-                                            break;
+                                                Main(new string[0]);
+                                                return;
 
-                                        /* update */
-                                        case '4':
-                                            {
-                                                Console.WriteLine("\n<---Update suplier distributor--->");
-                                                Console.WriteLine("masukkan ID suplier/distributor yang akan di perbarui:");
-                                                string id_s_d = Console.ReadLine();
-                                                Console.WriteLine("masukkan Nama suplier/distributor:");
-                                                string newNamaSuplier = Console.ReadLine();
-                                                Console.WriteLine("masukkan Alamat suplier / distributor:");
-                                                string newAlamat = Console.ReadLine();
-                                                Console.WriteLine("masukkan No telpon suplier / distributor:");
-                                                string newNoTelpon = Console.ReadLine();
-                                                try
+                                            default:
                                                 {
-                                                    pr.updatesuplierdist(id_s_d, newNamaSuplier, newAlamat, newNoTelpon, conn);
+                                                    Console.Clear();
+                                                    Console.WriteLine("\n invalid options");
                                                 }
-                                                catch (Exception ex)
-                                                {
-                                                    Console.WriteLine("Error: " + ex.Message);
-                                                }
-                                            }
-                                            break;
-
-                                        /* exit */
-                                        case '5':
-                                            conn.Close();
-                                            Console.Clear();
-                                            Main(new string[0]);
-                                            return;
-
-                                        default:
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("\n invalid options");
-                                            }
-                                            break;
+                                                break;
+                                        }
                                     }
                                 }
                                 break;
@@ -449,102 +552,106 @@ namespace ConsoleApp6
                             /*Data Padi/Beras*/
                             case '4':
                                 {
-                                    Console.WriteLine("\n<---Data Padi/Beras--->");
-                                    Console.WriteLine("1. Melihat data Padi/Beras");
-                                    Console.WriteLine("2. Tambah data Padi/Beras");
-                                    Console.WriteLine("3. Hapus data Padi/Beras");
-                                    Console.WriteLine("4. Update data Padi/Beras");
-                                    Console.WriteLine("5. exit");
-                                    Console.WriteLine("\n enter your choice (1-5): ");
-                                    char chPB = Convert.ToChar(Console.ReadLine());
-
-                                    switch (chPB)
+                                    bool backToMenuPadiBerasr = false;
+                                    while (!backToMenuPadiBerasr)
                                     {
-                                        /* read */
-                                        case '1':
-                                            {
+                                        Console.WriteLine("\n<---Data Padi/Beras--->");
+                                        Console.WriteLine("1. Melihat data Padi/Beras");
+                                        Console.WriteLine("2. Tambah data Padi/Beras");
+                                        Console.WriteLine("3. Hapus data Padi/Beras");
+                                        Console.WriteLine("4. Update data Padi/Beras");
+                                        Console.WriteLine("5. exit");
+                                        Console.WriteLine("\n enter your choice (1-5): ");
+                                        char chPB = Convert.ToChar(Console.ReadLine());
+
+                                        switch (chPB)
+                                        {
+                                            /* read */
+                                            case '1':
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("<-><->Berikut data padi dan beras>-<>-<");
+                                                    Console.WriteLine();
+                                                    pr.READpadiberas(conn);
+                                                }
+                                                break;
+
+                                            /* create */
+                                            case '2':
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("masukkan ID padiberas:");
+                                                    string idp_b = Console.ReadLine();
+                                                    Console.WriteLine("masukkan Jenis Padi/beras:");
+                                                    string Jenisp_b = Console.ReadLine();
+                                                    Console.WriteLine("masukkan Jumlah Padi/beras:");
+                                                    string Jumlahp_b = Console.ReadLine();
+                                                    try
+                                                    {
+                                                        pr.insertpadiberas(idp_b, Jenisp_b, Jumlahp_b, conn);
+                                                    }
+                                                    catch
+                                                    {
+                                                        Console.WriteLine("anda tidak memiliki " +
+                                                            "akses untuk menambah data");
+                                                    }
+                                                }
+                                                break;
+
+                                            /* delete */
+                                            case '3':
+                                                {
+                                                    Console.Clear();
+                                                    Console.WriteLine("Masukkan jenis padi yang ingin di hapus:\n");
+                                                    string Jenisp_b = Console.ReadLine();
+                                                    try
+                                                    {
+                                                        pr.deletepadiberas(Jenisp_b, conn);
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+                                                        Console.WriteLine("\nanda tidak memiliki" +
+                                                            "akses untuk menambah data atau data yang anda masukkan salah");
+                                                        Console.WriteLine(e.ToString());
+                                                    }
+                                                }
+                                                break;
+
+                                            /* update */
+                                            case '4':
+                                                {
+                                                    Console.WriteLine("\n<---Update Data Padi/Beras--->");
+                                                    Console.WriteLine("Masukkan ID Padi/Beras yang akan diperbarui:");
+                                                    string idp_b = Console.ReadLine();
+                                                    Console.WriteLine("Masukkan Jenis Padi/Beras baru:");
+                                                    string newJenis = Console.ReadLine();
+                                                    Console.WriteLine("Masukkan Jumlah Padi/Beras baru:");
+                                                    string newJumlah = Console.ReadLine();
+                                                    try
+                                                    {
+                                                        pr.updatepadiberas(idp_b, newJenis, newJumlah, conn);
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        Console.WriteLine("Error: " + ex.Message);
+                                                    }
+                                                }
+                                                break;
+
+                                            /* exit */
+                                            case '5':
+                                                conn.Close();
                                                 Console.Clear();
-                                                Console.WriteLine("<-><->Berikut data padi dan beras>-<>-<");
-                                                Console.WriteLine();
-                                                pr.READpadiberas(conn);
-                                            }
-                                            break;
+                                                Main(new string[0]);
+                                                return;
 
-                                        /* create */
-                                        case '2':
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("masukkan ID padiberas:");
-                                                string idp_b = Console.ReadLine();
-                                                Console.WriteLine("masukkan Jenis Padi/beras:");
-                                                string Jenisp_b = Console.ReadLine();
-                                                Console.WriteLine("masukkan Jumlah Padi/beras:");
-                                                string Jumlahp_b = Console.ReadLine();
-                                                try
+                                            default:
                                                 {
-                                                    pr.insertpadiberas(idp_b, Jenisp_b, Jumlahp_b, conn);
+                                                    Console.Clear();
+                                                    Console.WriteLine("\n invalid options");
                                                 }
-                                                catch
-                                                {
-                                                    Console.WriteLine("anda tidak memiliki " +
-                                                        "akses untuk menambah data");
-                                                }
-                                            }
-                                            break;
-
-                                        /* delete */
-                                        case '3':
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("Masukkan jenis padi yang ingin di hapus:\n");
-                                                string Jenisp_b = Console.ReadLine();
-                                                try
-                                                {
-                                                    pr.deletepadiberas(Jenisp_b, conn);
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                    Console.WriteLine("\nanda tidak memiliki" +
-                                                        "akses untuk menambah data atau data yang anda masukkan salah");
-                                                    Console.WriteLine(e.ToString());
-                                                }
-                                            }
-                                            break;
-
-                                        /* update */
-                                        case '4':
-                                            {
-                                                Console.WriteLine("\n<---Update Data Padi/Beras--->");
-                                                Console.WriteLine("Masukkan ID Padi/Beras yang akan diperbarui:");
-                                                string idp_b = Console.ReadLine();
-                                                Console.WriteLine("Masukkan Jenis Padi/Beras baru:");
-                                                string newJenis = Console.ReadLine();
-                                                Console.WriteLine("Masukkan Jumlah Padi/Beras baru:");
-                                                string newJumlah = Console.ReadLine();
-                                                try
-                                                {
-                                                    pr.updatepadiberas(idp_b, newJenis, newJumlah, conn);
-                                                }
-                                                catch (Exception ex)
-                                                {
-                                                    Console.WriteLine("Error: " + ex.Message);
-                                                }
-                                            }
-                                            break;
-
-                                        /* exit */
-                                        case '5':
-                                            conn.Close();
-                                            Console.Clear();
-                                            Main(new string[0]);
-                                            return;
-
-                                        default:
-                                            {
-                                                Console.Clear();
-                                                Console.WriteLine("\n invalid options");
-                                            }
-                                            break;
+                                                break;
+                                        }
                                     }
                                 }
                                 break;
@@ -556,7 +663,6 @@ namespace ConsoleApp6
                                 Console.Clear();
                                 Main(new string[0]);
                                 return;
-
 
                             default:
                                 {
@@ -840,13 +946,12 @@ namespace ConsoleApp6
         }
 
         /* func insert/create data */
-        public void insertTransaksi(string id_Transaksi, string jumlahBerat, string TotalTransaksi, string ID_pb, string ID_sd, SqlConnection conn)
+        public void insertTransaksi(string jumlahBerat, string TotalTransaksi, string ID_pb, string ID_sd, SqlConnection conn)
         {
             try
             {
-                string str = "INSERT INTO Transaksi (ID_Transaksi,Jumlah_Berat,Total_Transaksi,ID_p_b,ID_s_d) VALUES (@id_transaksi,@jumlahbrt, @totaltr,@id_pb, @id_sd)";
+                string str = "INSERT INTO Transaksi (Jumlah_Berat,Total_Transaksi,ID_p_b,ID_s_d) VALUES (@jumlahbrt, @totaltr,@id_pb, @id_sd)";
                 SqlCommand cmd = new SqlCommand(str, conn);
-                cmd.Parameters.Add(new SqlParameter("@id_transaksi", id_Transaksi));
                 cmd.Parameters.Add(new SqlParameter("@jumlahbrt", jumlahBerat));
                 cmd.Parameters.Add(new SqlParameter("@totaltr", TotalTransaksi));
                 cmd.Parameters.Add(new SqlParameter("@id_pb", ID_pb));
@@ -929,8 +1034,27 @@ namespace ConsoleApp6
             r.Close();
         }
 
-        //validasi data 
-        public bool IsDataUnique(string tableName, string columnName1, string value1, string columnName2, string value2, SqlConnection conn)
+        public void READselectedTransaksi(string ID_Transaksi, SqlConnection conn) 
+        {
+            SqlCommand cmd = new SqlCommand("SELECT ID_Transaksi, Jumlah_Berat, Total_Transaksi, ID_p_b, ID_s_d FROM Transaksi WHERE ID_Transaksi = @ID_Transaksi", conn);
+            cmd.Parameters.Add("@ID_Transaksi", SqlDbType.VarChar).Value = ID_Transaksi;
+            SqlDataReader r = cmd.ExecuteReader();
+
+            Console.WriteLine("┌──────────────┬──────────────┬─────────────────┬──────────┬───────────┐");
+            Console.WriteLine("| ID_Transaksi | Jumlah_Berat | Total_Transaksi | ID_p_b   |   ID_s_d  |");
+            Console.WriteLine("├──────────────┼──────────────┼─────────────────┼──────────┼───────────┤");
+
+            while (r.Read())
+            {
+                Console.WriteLine($"| {r["ID_Transaksi"],-12} | {r["Jumlah_Berat"],-12} | {r["Total_Transaksi"],-15} | {r["ID_p_b"],-8} | {r["ID_s_d"],-8} |");
+            }
+
+            Console.WriteLine("└──────────────┴──────────────┴─────────────────┴──────────┴───────────┘");
+            r.Close();
+        }
+
+        //validasi 2 data 
+        public bool IsDataUnique2(string tableName, string columnName1, string value1, string columnName2, string value2, SqlConnection conn)
         {
             string query = $"SELECT COUNT(*) FROM {tableName} WHERE {columnName1} = @value1 AND {columnName2} = @value2";
 
@@ -969,8 +1093,44 @@ namespace ConsoleApp6
                 }
             }
         }
+        //validasi 1 data 
+        public bool IsDataUnique1(string tableName, string columnName1, string value1, SqlConnection conn)
+        {
+            string query = $"SELECT COUNT(*) FROM {tableName} WHERE {columnName1} = @value1";
 
+            using (SqlCommand command = new SqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@value1", value1);
 
+                try
+                {
+                    // Pastikan koneksi ditutup jika sudah terbuka sebelumnya
+                    if (conn.State != ConnectionState.Closed)
+                    {
+                        conn.Close();
+                    }
+
+                    conn.Open();
+                    int count = (int)command.ExecuteScalar();
+
+                    // Jika ada data dengan nilai yang sama, return false
+                    // Jika tidak ada, return true
+                    return count == 0;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                    return false;
+                }
+                finally
+                {
+                    // Pastikan untuk menutup koneksi setelah selesai digunakan
+                    if (conn.State != ConnectionState.Closed)
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+        }
     }
 }
-
