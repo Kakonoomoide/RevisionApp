@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace ConsoleApp6
 {
@@ -272,13 +273,13 @@ namespace ConsoleApp6
                                                         pr.READsuplierdist(conn);
                                                         Console.WriteLine("masukkan ID suplier/ distributor:");
                                                         ID_sd = Console.ReadLine();
-                                                        if (!string.IsNullOrWhiteSpace(ID_sd))
+                                                        if (!string.IsNullOrWhiteSpace(ID_sd) && pr.isValidIDsuplierDistributor(ID_sd, conn))
                                                         {
                                                             break;
                                                         }
                                                         else
                                                         {
-                                                            Console.WriteLine("ID suplier/ distributor tidak boleh kosong. Silakan coba lagi.");
+                                                            Console.WriteLine("ID suplier/ distributor tidak boleh kosong atau tidak terdafar dalam database. Silakan coba lagi.");
                                                         }
                                                     }
                                                     while (true)
@@ -450,15 +451,61 @@ namespace ConsoleApp6
                                             /* create */
                                             case '2':
                                                 {
+                                                    string id_s_d, NamaSuplier, Alamat, NoTelpon;
                                                     Console.Clear();
-                                                    Console.WriteLine("masukkan ID suplier/distributor:");
-                                                    string id_s_d = Console.ReadLine();
-                                                    Console.WriteLine("masukkan Nama suplier/distributor:");
-                                                    string NamaSuplier = Console.ReadLine();
-                                                    Console.WriteLine("masukkan Alamat suplier / distributor:");
-                                                    string Alamat = Console.ReadLine();
-                                                    Console.WriteLine("masukkan No telpon suplier / distributor:");
-                                                    string NoTelpon = Console.ReadLine();
+                                                    while (true)
+                                                    {
+                                                        Console.WriteLine("Masukkan ID suplier/distributor:");
+                                                        id_s_d = Console.ReadLine().Trim();
+                                                        if (IsValidIDSuplierDistributor(id_s_d))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("ID suplier/distributor tidak valid. Silakan coba lagi. untuk format id S-PD-000/D-BR-000 ");
+                                                        }
+                                                    }
+                                                    while (true)
+                                                    {
+                                                        Console.WriteLine("Masukkan Nama suplier/distributor:");
+                                                        NamaSuplier = Console.ReadLine().Trim();
+                                                        if (!string.IsNullOrWhiteSpace(NamaSuplier))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Nama suplier/distributor tidak boleh kosong. Silakan coba lagi.");
+                                                        }
+                                                    }
+                                                    while (true)
+                                                    {
+                                                        Console.WriteLine("Masukkan Alamat suplier / distributor:");
+                                                        Alamat = Console.ReadLine().Trim();
+                                                        if (!string.IsNullOrWhiteSpace(Alamat))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Alamat suplier/distributor tidak boleh kosong. Silakan coba lagi.");
+                                                        }
+                                                    }
+                                                    while (true)
+                                                    {
+                                                        Console.WriteLine("Masukkan nomor telepon (format: +1234567890):");
+                                                        NoTelpon = Console.ReadLine();
+
+                                                        if (IsValidPhoneNumber(NoTelpon))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Format nomor telepon tidak valid. Silakan coba lagi.");
+                                                        }
+                                                    }
 
                                                     bool isUnique = pr.IsDataUnique2("Suplier_Distributor", "Nama_Suplier", NamaSuplier, "Alamat", Alamat, conn);
 
@@ -486,16 +533,32 @@ namespace ConsoleApp6
                                             case '3':
                                                 {
                                                     Console.Clear();
-                                                    Console.WriteLine("hapus data berdasarkan id suplier/ distributor:\n");
+                                                    pr.READsuplierdist(conn);
+                                                    Console.WriteLine("Masukkan ID suplier/distributor yang ingin dihapus:");
                                                     string id_s_d = Console.ReadLine();
+                                                    pr.READselectedSuplierDist(id_s_d, conn);
+
                                                     try
                                                     {
-                                                        pr.deletesuplierdist(id_s_d, conn);
+                                                        Console.WriteLine("Ketik Y/y untuk hapus data, ketik N/n untuk membatalkan.");
+                                                        char Vdb = Convert.ToChar(Console.ReadLine());
+                                                        switch (char.ToUpper(Vdb))
+                                                        {
+                                                            case 'Y':
+                                                                pr.deletesuplierdist(id_s_d, conn);
+                                                                Console.WriteLine("Data dengan ID " + id_s_d + " berhasil dihapus.");
+                                                                break;
+                                                            case 'N':
+                                                                Console.WriteLine("Membatalkan operasi hapus data.");
+                                                                break;
+                                                            default:
+                                                                Console.WriteLine("Pilihan tidak valid.");
+                                                                break;
+                                                        }
                                                     }
                                                     catch (Exception e)
                                                     {
-                                                        Console.WriteLine("\nanda tidak memiliki" +
-                                                            "akses untuk menambah data atau data yang anda masukkan salah");
+                                                        Console.WriteLine("\nAnda tidak memiliki akses untuk menghapus data atau data yang Anda masukkan salah.");
                                                         Console.WriteLine(e.ToString());
                                                     }
                                                 }
@@ -507,15 +570,33 @@ namespace ConsoleApp6
                                                     Console.WriteLine("\n<---Update suplier distributor--->");
                                                     Console.WriteLine("masukkan ID suplier/distributor yang akan di perbarui:");
                                                     string id_s_d = Console.ReadLine();
-                                                    Console.WriteLine("masukkan Nama suplier/distributor:");
-                                                    string newNamaSuplier = Console.ReadLine();
-                                                    Console.WriteLine("masukkan Alamat suplier / distributor:");
-                                                    string newAlamat = Console.ReadLine();
-                                                    Console.WriteLine("masukkan No telpon suplier / distributor:");
-                                                    string newNoTelpon = Console.ReadLine();
+
+                                                    pr.READselectedSuplierDist(id_s_d, conn);
                                                     try
                                                     {
-                                                        pr.updatesuplierdist(id_s_d, newNamaSuplier, newAlamat, newNoTelpon, conn);
+                                                        Console.WriteLine("Ketik Y/y untuk update data dan ketik N/n untuk cancel");
+                                                        char Vdb = Convert.ToChar(Console.ReadLine());
+
+                                                        switch (char.ToUpper(Vdb))
+                                                        {
+                                                            case 'Y':
+                                                                Console.WriteLine("masukkan Nama suplier/distributor:");
+                                                                string newNamaSuplier = Console.ReadLine();
+                                                                Console.WriteLine("masukkan Alamat suplier / distributor:");
+                                                                string newAlamat = Console.ReadLine();
+                                                                Console.WriteLine("masukkan No telpon suplier / distributor:");
+                                                                string newNoTelpon = Console.ReadLine();
+                                                                pr.updatesuplierdist(id_s_d, newNamaSuplier, newAlamat, newNoTelpon, conn);
+
+                                                            break;
+                                                            case 'N':
+                                                                Console.WriteLine("Membatalkan operasi update data.");
+                                                            break;
+                                                            default:
+                                                                Console.WriteLine("Pilihan tidak valid.");
+                                                            break;
+                                                        }
+                                                        
                                                     }
                                                     catch (Exception ex)
                                                     {
@@ -573,21 +654,66 @@ namespace ConsoleApp6
                                             /* create */
                                             case '2':
                                                 {
+                                                    string idp_b, Jumlahp_b, Jenisp_b;
                                                     Console.Clear();
-                                                    Console.WriteLine("masukkan ID padiberas:");
-                                                    string idp_b = Console.ReadLine();
-                                                    Console.WriteLine("masukkan Jenis Padi/beras:");
-                                                    string Jenisp_b = Console.ReadLine();
-                                                    Console.WriteLine("masukkan Jumlah Padi/beras:");
-                                                    string Jumlahp_b = Console.ReadLine();
-                                                    try
+                                                    while (true)
                                                     {
-                                                        pr.insertpadiberas(idp_b, Jenisp_b, Jumlahp_b, conn);
+                                                        Console.WriteLine("masukkan ID padiberas:");
+                                                        idp_b = Console.ReadLine();
+                                                        if (IsValidIDjenisPadiBeras(idp_b))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("ID padiberas tidak boleh kosong. Silakan coba lagi.");
+                                                        }
                                                     }
-                                                    catch
+
+                                                    while (true)
                                                     {
-                                                        Console.WriteLine("anda tidak memiliki " +
-                                                            "akses untuk menambah data");
+                                                        Console.WriteLine("masukkan Jenis Padi/beras:");
+                                                        Jenisp_b = Console.ReadLine();
+                                                        if (!string.IsNullOrWhiteSpace(Jenisp_b))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("jenis Padi/beras tidak boleh kosong. Silakan coba lagi.");
+                                                        }
+                                                    }
+
+                                                    while (true)
+                                                    {
+                                                        Console.WriteLine("masukkan Jumlah Padi/beras:");
+                                                        Jumlahp_b = Console.ReadLine();
+                                                        if (!string.IsNullOrWhiteSpace(Jumlahp_b))
+                                                        {
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Console.WriteLine("Jumlah Padi/beras tidak boleh kosong. Silakan coba lagi.");
+                                                        }
+                                                    }
+
+                                                    bool isUnique = pr.IsDataUnique1("Padi_Beras", "Jenis_p_b", Jenisp_b, conn);
+
+                                                    if (isUnique)
+                                                    {
+                                                        try
+                                                        {
+                                                            pr.insertpadiberas(idp_b, Jenisp_b, Jumlahp_b, conn);
+                                                        }
+                                                        catch (Exception ex)
+                                                        {
+                                                            Console.WriteLine("Error: " + ex.Message);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        Console.WriteLine($"jenis Padi/Beras '{Jenisp_b}' sudah ada di dalam tabel.");
                                                     }
                                                 }
                                                 break;
@@ -596,11 +722,28 @@ namespace ConsoleApp6
                                             case '3':
                                                 {
                                                     Console.Clear();
-                                                    Console.WriteLine("Masukkan jenis padi yang ingin di hapus:\n");
-                                                    string Jenisp_b = Console.ReadLine();
+                                                    pr.READpadiberas(conn);
+                                                    Console.WriteLine("Masukkan idp_b padi yang ingin di hapus:\n");
+                                                    string idp_b = Console.ReadLine();
+
+                                                    pr.READselectedPadiBeras(idp_b, conn);
                                                     try
                                                     {
-                                                        pr.deletepadiberas(Jenisp_b, conn);
+                                                        Console.WriteLine("Ketik Y/y untuk hapus data, ketik N/n untuk membatalkan.");
+                                                        char Vdb = Convert.ToChar(Console.ReadLine());
+                                                        switch (char.ToUpper(Vdb))
+                                                        {
+                                                            case 'Y':
+                                                                pr.deletepadiberas(idp_b, conn);
+                                                                Console.WriteLine("Data dengan ID " + idp_b + " berhasil dihapus.");
+                                                                break;
+                                                            case 'N':
+                                                                Console.WriteLine("Membatalkan operasi hapus data.");
+                                                                break;
+                                                            default:
+                                                                Console.WriteLine("Pilihan tidak valid.");
+                                                                break;
+                                                        }
                                                     }
                                                     catch (Exception e)
                                                     {
@@ -614,16 +757,35 @@ namespace ConsoleApp6
                                             /* update */
                                             case '4':
                                                 {
+                                                    string idp_b, newJenis, newJumlah;
                                                     Console.WriteLine("\n<---Update Data Padi/Beras--->");
-                                                    Console.WriteLine("Masukkan ID Padi/Beras yang akan diperbarui:");
-                                                    string idp_b = Console.ReadLine();
-                                                    Console.WriteLine("Masukkan Jenis Padi/Beras baru:");
-                                                    string newJenis = Console.ReadLine();
-                                                    Console.WriteLine("Masukkan Jumlah Padi/Beras baru:");
-                                                    string newJumlah = Console.ReadLine();
+                                                    Console.WriteLine("masukkan ID suplier/distributor yang akan di perbarui:");
+                                                    idp_b = Console.ReadLine();
+
+                                                    pr.READselectedPadiBeras(idp_b, conn);
+
                                                     try
                                                     {
-                                                        pr.updatepadiberas(idp_b, newJenis, newJumlah, conn);
+                                                        Console.WriteLine("Ketik Y/y untuk update data dan ketik N/n untuk cancel");
+                                                        char Vdb = Convert.ToChar(Console.ReadLine());
+
+                                                        switch (char.ToUpper(Vdb))
+                                                        {
+                                                            case 'Y':
+                                                                Console.WriteLine("Masukkan Jenis Padi/Beras baru:");
+                                                                newJenis = Console.ReadLine();
+                                                                Console.WriteLine("Masukkan Jumlah Padi/Beras baru:");
+                                                                newJumlah = Console.ReadLine();
+
+                                                                pr.updatepadiberas(idp_b, newJenis, newJumlah, conn);
+                                                                break;
+                                                            case 'N':
+                                                                Console.WriteLine("Membatalkan operasi update data.");
+                                                                break;
+                                                            default:
+                                                                Console.WriteLine("Pilihan tidak valid.");
+                                                                break;
+                                                        }
                                                     }
                                                     catch (Exception ex)
                                                     {
@@ -1008,6 +1170,17 @@ namespace ConsoleApp6
             int count = (int)cmd.ExecuteScalar();
             return count > 0;
         }
+        /*function for validation*/
+        public bool isValidIDsuplierDistributor(string id, SqlConnection conn)
+        {
+            string query = "SELECT COUNT(*) FROM Suplier_Distributor WHERE ID_s_d = @id";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            int count = (int)cmd.ExecuteScalar();
+            return count > 0;
+        }
+
         /*validation delete log*/
         public void READselecteddatabarang(string ID_log, SqlConnection conn)
         {
@@ -1046,7 +1219,43 @@ namespace ConsoleApp6
             Console.WriteLine("└──────────────┴──────────────┴─────────────────┴──────────┴───────────┘");
             r.Close();
         }
+        public void READselectedSuplierDist(string ID_s_d, SqlConnection conn)
+        {
+            SqlCommand cmd = new SqlCommand("SELECT ID_s_d, Nama_Suplier, Alamat, No_Telpon FROM Suplier_Distributor WHERE ID_s_d = @ID_s_d", conn);
+            cmd.Parameters.Add("@ID_s_d", SqlDbType.VarChar).Value = ID_s_d;
+            SqlDataReader r = cmd.ExecuteReader();
 
+            Console.WriteLine("┌──────────┬───────────────┬─────────────────┬─────────────────┐");
+            Console.WriteLine("| ID_s_d   | Nama_Suplier  |     Alamat      |   No_Telpon     |");
+            Console.WriteLine("├──────────┼───────────────┼─────────────────┼─────────────────┤");
+
+            while (r.Read())
+            {
+                Console.WriteLine($"| {r["ID_s_d"],-8} | {r["Nama_Suplier"],-13} | {r["Alamat"],-15} | {r["No_Telpon"],-10} |");
+            }
+
+            Console.WriteLine("└──────────┴───────────────┴─────────────────┴─────────────────┘");
+            r.Close();
+        }
+
+        public void READselectedPadiBeras(string idp_b, SqlConnection conn)
+        {
+            SqlCommand cmd = new SqlCommand("SELECT ID_p_b, Jenis_p_b, Jumlah_p_b FROM Padi_Beras WHERE idp_b = @idp_b", conn);
+            cmd.Parameters.Add("@idp_b", SqlDbType.VarChar).Value = idp_b;
+            SqlDataReader r = cmd.ExecuteReader();
+
+            Console.WriteLine("┌───────┬─────────────────┬──────────────┐");
+            Console.WriteLine("| ID_p_b|Jenis_p_b        | Jumlah_p_b   |");
+            Console.WriteLine("├───────┼─────────────────┼──────────────┤");
+
+            while (r.Read())
+            {
+                Console.WriteLine($"| {r["ID_p_b"],-2} | {r["Jenis_p_b"],-1} | {r["Jumlah_p_b"],-12} |");
+            }
+
+            Console.WriteLine("└───────┴─────────────────┴──────────────┘");
+            r.Close();
+        }
         //validasi 2 data 
         public bool IsDataUnique2(string tableName, string columnName1, string value1, string columnName2, string value2, SqlConnection conn)
         {
@@ -1125,6 +1334,26 @@ namespace ConsoleApp6
                     }
                 }
             }
+        }
+        //validasi input idsuplierdistributor
+        static bool IsValidIDSuplierDistributor(string id)
+        {
+            string pattern = @"^(S-PD|D-BR)-\d{3}$";
+            Match match = Regex.Match(id, pattern);
+
+            return match.Success;
+        }
+        static bool IsValidIDjenisPadiBeras(string id)
+        {
+            string pattern = @"^(PD|BR)-[A-Z]{2}$";
+            Match match = Regex.Match(id, pattern);
+            return match.Success;
+        }
+        //validasi no telp
+        static bool IsValidPhoneNumber(string phoneNumber)
+        {
+            string pattern = @"^\+\d{5,14}$";
+            return Regex.IsMatch(phoneNumber, pattern);
         }
     }
 }
