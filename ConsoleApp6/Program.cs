@@ -844,7 +844,7 @@ namespace ConsoleApp6
         {
             SqlCommand cmd = new SqlCommand("SELECT ID_p_b, Jenis_p_b, Jumlah_p_b FROM Padi_Beras", conn);
             SqlDataReader r = cmd.ExecuteReader();
-
+            
             Console.WriteLine("┌───────┬─────────────────┬──────────────┐");
             Console.WriteLine("| ID_p_b|Jenis_p_b        | Jumlah_p_b   |");
             Console.WriteLine("├───────┼─────────────────┼──────────────┤");
