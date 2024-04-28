@@ -185,15 +185,9 @@ namespace ConsoleApp6
                                                                 string newJumlahBerat = Console.ReadLine();
                                                                 Console.WriteLine("masukkan tanggal dan waktu yang baru(kosongkan jika tidak ingin mengubah):");
                                                                 string newTanggal = Console.ReadLine();
-                                                                if (!string.IsNullOrEmpty(newJumlahBerat) || !string.IsNullOrEmpty(newTanggal))
-                                                                {
-                                                                    pr.updatedatabarang(newID_log, newJumlahBerat, newTanggal, conn);
-                                                                    Console.WriteLine("Data dengan id " + newID_log + " Berhasil di update");
-                                                                }
-                                                                else
-                                                                {
-                                                                    Console.WriteLine("Tidak ada data baru yang dimasukkan. Data tetap tidak berubah.");
-                                                                }
+
+                                                                pr.updatedatabarang(newID_log, newJumlahBerat, newTanggal, conn);
+                                                                Console.WriteLine("Data dengan id " + newID_log + " Berhasil di update");
                                                                 break;
                                                             case 'n':
                                                             case 'N':
