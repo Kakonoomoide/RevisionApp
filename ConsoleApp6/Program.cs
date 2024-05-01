@@ -949,10 +949,11 @@ namespace ConsoleApp6
         }
 
         /* func insert/create data */
-        public bool insertpadiberas(string idp_b, string Jenisp_b, string Jumlahp_b, SqlConnection conn)
+        public void insertpadiberas(string idp_b, string Jenisp_b, string Jumlahp_b, SqlConnection conn)
         {
             try
             {
+                conn.Open();
                 string str = "INSERT INTO Padi_Beras (ID_p_b,Jenis_p_b, Jumlah_p_b) VALUES (@id,@jenis, @jumlah)";
                 SqlCommand cmd = new SqlCommand(str, conn);
                 cmd.Parameters.Add(new SqlParameter("@id", idp_b));
@@ -960,12 +961,17 @@ namespace ConsoleApp6
                 cmd.Parameters.Add(new SqlParameter("@jumlah", Jumlahp_b));
                 cmd.ExecuteNonQuery();
                 Console.WriteLine("Data Berhasil Ditambahkan");
-                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
-                return false;
+            }
+            finally
+            {
+                if (conn.State != ConnectionState.Closed)
+                {
+                    conn.Close();
+                }
             }
         }
 
