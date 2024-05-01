@@ -191,21 +191,26 @@ namespace ConsoleApp6
                                                                 {
                                                                     case '1':
                                                                         {
+                                                                            Console.WriteLine("Masukkan Jumlah berat baru (kosongkan jika tidak ingin mengubah):");
+                                                                            string newJumlahBerat = Console.ReadLine();
 
+                                                                            pr.UpdateDataALL("Data_Barang", "Jumlah_Berat", newJumlahBerat, newID_log,conn);
                                                                         }
                                                                         break;
                                                                     case '2':
                                                                         {
+                                                                            Console.WriteLine("masukkan tanggal dan waktu yang baru(kosongkan jika tidak ingin mengubah):");
+                                                                            string newTanggal = Console.ReadLine();
 
+                                                                            pr.UpdateDataALL("Data_Barang", "Tanggal", newTanggal, newID_log, conn);
                                                                         }
                                                                         break;
                                                                 }
-                                                                Console.WriteLine("Masukkan Jumlah berat baru (kosongkan jika tidak ingin mengubah):");
-                                                                string newJumlahBerat = Console.ReadLine();
-                                                                Console.WriteLine("masukkan tanggal dan waktu yang baru(kosongkan jika tidak ingin mengubah):");
-                                                                string newTanggal = Console.ReadLine();
-
-                                                                pr.updatedatabarang(newID_log, newJumlahBerat, newTanggal, conn);
+                                                                /*Console.WriteLine("Masukkan Jumlah berat baru (kosongkan jika tidak ingin mengubah):");
+                                                                string newJumlahBerat = Console.ReadLine();*/
+                                                                /*Console.WriteLine("masukkan tanggal dan waktu yang baru(kosongkan jika tidak ingin mengubah):");
+                                                                string newTanggal = Console.ReadLine*/
+                                                                //pr.updatedatabarang(newID_log, newJumlahBerat, newTanggal, conn);
                                                                 Console.WriteLine("Data dengan id " + newID_log + " Berhasil di update");
                                                                 break;
                                                             case 'n':
@@ -396,12 +401,31 @@ namespace ConsoleApp6
                                                         switch (char.ToUpper(Vdb))
                                                         {
                                                             case 'Y':
-                                                                Console.WriteLine("Masukkan jumlah berat baru (kosongkan jika tidak ingin mengubah):");
-                                                                string newJumlahBerat = Console.ReadLine();
-                                                                Console.WriteLine("Masukkan total harga baru (kosongkan jika tidak ingin mengubah):");
-                                                                string newTotalHarga = Console.ReadLine();
+                                                                Console.WriteLine("1. Jumlah berat Baru");
+                                                                Console.WriteLine("2. Total transaksi baru");
+                                                                Console.WriteLine("pilih yang ingin di update  (1-2: )");
+                                                                char Uvd = Convert.ToChar(Console.ReadLine());
+
+                                                                switch (Uvd)
+                                                                {
+                                                                    case '1':
+                                                                        {
+                                                                            Console.WriteLine("Masukkan jumlah berat baru :");
+                                                                            string newJumlahBerat = Console.ReadLine();
+
+                                                                            pr.UpdateDataALL("Transaksi", "Jumlah_Berat", newJumlahBerat, newID_Transaksi, conn);
+                                                                        }
+                                                                        break;
+                                                                    case '2':
+                                                                        {
+                                                                            Console.WriteLine("Masukkan total transaksi baru :");
+                                                                            string newTotalHarga = Console.ReadLine();
+
+                                                                            pr.UpdateDataALL("Transaksi", "Total_Transaksi", newTotalHarga, newID_Transaksi, conn);
+                                                                        }
+                                                                        break;
+                                                                }
                                                                 
-                                                                pr.updateTransaksi(newID_Transaksi, newJumlahBerat, newTotalHarga, conn);
                                                                 Console.WriteLine($"Data dengan ID transaksi {newID_Transaksi} berhasil diperbarui.");
                                                                 break;
                                                             case 'N':
@@ -598,13 +622,40 @@ namespace ConsoleApp6
                                                         switch (char.ToUpper(Vdb))
                                                         {
                                                             case 'Y':
-                                                                Console.WriteLine("masukkan Nama suplier/distributor:");
-                                                                string newNamaSuplier = Console.ReadLine();
-                                                                Console.WriteLine("masukkan Alamat suplier / distributor:");
-                                                                string newAlamat = Console.ReadLine();
-                                                                Console.WriteLine("masukkan No telpon suplier / distributor:");
-                                                                string newNoTelpon = Console.ReadLine();
-                                                                pr.updatesuplierdist(id_s_d, newNamaSuplier, newAlamat, newNoTelpon, conn);
+
+                                                                Console.WriteLine("1. Nama suplier/distributor");
+                                                                Console.WriteLine("2. Alamat suplier/distributor");
+                                                                Console.WriteLine("3. No telpon suplier/distributor");
+                                                                Console.WriteLine("pilih yang ingin di update  (1-3: )");
+                                                                char Uvd = Convert.ToChar(Console.ReadLine());
+
+                                                                switch (Uvd)
+                                                                {
+                                                                    case '1':
+                                                                        {
+                                                                            Console.WriteLine("masukkan Nama suplier/distributor:");
+                                                                            string newNamaSuplier = Console.ReadLine();
+
+                                                                            pr.UpdateDataALL("Suplier_Distributor", "Nama_Suplier", newNamaSuplier, id_s_d, conn);
+                                                                        }
+                                                                        break;
+                                                                    case '2':
+                                                                        {
+                                                                            Console.WriteLine("masukkan Alamat suplier / distributor:");
+                                                                            string newAlamat = Console.ReadLine();
+
+                                                                            pr.UpdateDataALL("Suplier_Distributor", "Alamat", newAlamat, id_s_d, conn);
+                                                                        }
+                                                                        break;
+                                                                    case '3':
+                                                                        {
+                                                                            Console.WriteLine("masukkan No telpon suplier / distributor:");
+                                                                            string newNoTelpon = Console.ReadLine();
+
+                                                                            pr.UpdateDataALL("Suplier_Distributor", "No_Telpon", newNoTelpon, id_s_d, conn);
+                                                                        }
+                                                                        break;
+                                                                }
 
                                                             break;
                                                             case 'N':
@@ -790,12 +841,33 @@ namespace ConsoleApp6
                                                         switch (char.ToUpper(Vdb))
                                                         {
                                                             case 'Y':
-                                                                Console.WriteLine("Masukkan Jenis Padi/Beras baru:");
-                                                                newJenis = Console.ReadLine();
-                                                                Console.WriteLine("Masukkan Jumlah Padi/Beras baru:");
-                                                                newJumlah = Console.ReadLine();
 
-                                                                pr.updatepadiberas(idp_b, newJenis, newJumlah, conn);
+                                                                Console.WriteLine("1. Nama suplier/distributor");
+                                                                Console.WriteLine("2. Alamat suplier/distributor");
+                                                                Console.WriteLine("3. No telpon suplier/distributor");
+                                                                Console.WriteLine("pilih yang ingin di update  (1-3: )");
+                                                                char Uvd = Convert.ToChar(Console.ReadLine());
+
+                                                                switch (Uvd)
+                                                                {
+                                                                    case '1':
+                                                                        {
+                                                                            Console.WriteLine("Masukkan Jenis Padi/Beras baru:");
+                                                                            newJenis = Console.ReadLine();
+
+                                                                            pr.UpdateDataALL("Padi_Beras", "Jenis_p_b", newJenis, idp_b, conn);
+                                                                        }
+                                                                        break;
+                                                                    case '2':
+                                                                        {
+                                                                            Console.WriteLine("Masukkan Jumlah Padi/Beras baru:");
+                                                                            newJumlah = Console.ReadLine();
+
+                                                                            pr.UpdateDataALL("Padi_Beras", "Jumlah_p_b", newJumlah, idp_b, conn);
+                                                                        }
+                                                                        break;
+                                                                }
+                                                                
                                                                 break;
                                                             case 'N':
                                                                 Console.WriteLine("Membatalkan operasi update data.");
@@ -910,31 +982,6 @@ namespace ConsoleApp6
             Console.WriteLine("Data berhasil di hapus");
         }
 
-        /* func update data */
-        public void updatepadiberas(string ID_p_b, string newJenisp_b, string newJumlahp_b, SqlConnection conn)
-        {
-            try
-            {
-                string str = "UPDATE Padi_Beras SET Jenis_p_b = @newJenis, Jumlah_p_b = @newJumlah WHERE ID_p_b = @id";
-                SqlCommand cmd = new SqlCommand(str, conn);
-                cmd.Parameters.Add(new SqlParameter("@newJenis", newJenisp_b));
-                cmd.Parameters.Add(new SqlParameter("@newJumlah", newJumlahp_b));
-                cmd.Parameters.Add(new SqlParameter("@id", ID_p_b));
-                int rowsAffected = cmd.ExecuteNonQuery();
-                if (rowsAffected > 0)
-                {
-                    Console.WriteLine("Data padi dan beras Berhasil Diperbarui");
-                }
-                else
-                {
-                    Console.WriteLine("Tidak ada data dengan ID yang sesuai");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
         /* end funtion padi dan beras */
 
         /*function data barang*/
@@ -987,32 +1034,6 @@ namespace ConsoleApp6
 
             cmd.Parameters.Add(new SqlParameter("ID_log", id_log)); ;
             cmd.ExecuteNonQuery();
-        }
-
-        /* func update data */
-        public void updatedatabarang(string newID_log, string newJumlahBerat, string newTanggal, SqlConnection conn)
-        {
-            try
-            {
-                string str = "UPDATE Data_Barang SET Jumlah_Berat = @newjumlah,Tanggal = @newtanggal WHERE ID_log = @newid_log";
-                SqlCommand cmd = new SqlCommand(str, conn);
-                cmd.Parameters.Add(new SqlParameter("@newjumlah", newJumlahBerat));
-                cmd.Parameters.Add(new SqlParameter("@newtanggal", newTanggal));
-                cmd.Parameters.Add(new SqlParameter("@newid_log", newID_log));
-                int rowsAffected = cmd.ExecuteNonQuery();
-                if (rowsAffected > 0)
-                {
-                    Console.WriteLine("Data barang Berhasil Diperbarui");
-                }
-                else
-                {
-                    Console.WriteLine("Tidak ada data dengan ID yang sesuai");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
         }
         /* end function data barang*/
 
@@ -1070,33 +1091,6 @@ namespace ConsoleApp6
             cmd.ExecuteNonQuery();
             Console.WriteLine("Data berhasil di hapus");
         }
-
-        /* func update data */
-        public void updatesuplierdist(string newid_s_d, string newNamaSuplier, string newAlamat, string newNoTelpon, SqlConnection conn)
-        {
-            try
-            {
-                string str = "UPDATE Suplier_Distributor SET Nama_Suplier=@newNamaSuplier , Alamat=@newAlamat ,No_Telpon=@newNoTelpon WHERE ID_s_d = @newid_s_d";
-                SqlCommand cmd = new SqlCommand(str, conn);
-                cmd.Parameters.Add(new SqlParameter("@newNamaSuplier", newNamaSuplier));
-                cmd.Parameters.Add(new SqlParameter("@newAlamat", newAlamat));
-                cmd.Parameters.Add(new SqlParameter("@newNoTelpon", newNoTelpon));
-                cmd.Parameters.Add(new SqlParameter("@newid_s_d", newid_s_d));
-                int rowsAffected = cmd.ExecuteNonQuery();
-                if (rowsAffected > 0)
-                {
-                    Console.WriteLine("Data suplier/distributor Berhasil Diperbarui");
-                }
-                else
-                {
-                    Console.WriteLine("Tidak ada data dengan ID yang sesuai");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
         /*end function suplier & distributor*/
 
         /*function transaksi*/
@@ -1151,31 +1145,7 @@ namespace ConsoleApp6
             Console.WriteLine("Data berhasil di hapus");
         }
 
-        /* func update data */
-        public void updateTransaksi(string newID_Transaksi, string newJumlahbrt, string newTotaltr, SqlConnection conn)
-        {
-            try
-            {
-                string str = "UPDATE Transaksi SET Jumlah_Berat=@newjumlahbrt ,Total_Transaksi=@newtotaltr WHERE ID_Transaksi = @newid_transaksi";
-                SqlCommand cmd = new SqlCommand(str, conn);
-                cmd.Parameters.Add(new SqlParameter("@newjumlahbrt", newJumlahbrt));
-                cmd.Parameters.Add(new SqlParameter("@newtotaltr", newTotaltr));
-                cmd.Parameters.Add(new SqlParameter("@newid_transaksi", newID_Transaksi));
-                int rowsAffected = cmd.ExecuteNonQuery();
-                if (rowsAffected > 0)
-                {
-                    Console.WriteLine("Data transaksi Berhasil Diperbarui");
-                }
-                else
-                {
-                    Console.WriteLine("Tidak ada data dengan ID yang sesuai");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
+        
         /* end function transaksi*/
 
         /*function for validation*/
@@ -1361,6 +1331,7 @@ namespace ConsoleApp6
 
             return match.Success;
         }
+        //validasi IDjenisPadiBeras
         static bool IsValidIDjenisPadiBeras(string id)
         {
             string pattern = @"^(PD|BR)-[A-Z]{2}$";
@@ -1373,17 +1344,17 @@ namespace ConsoleApp6
             string pattern = @"^\+\d{5,14}$";
             return Regex.IsMatch(phoneNumber, pattern);
         }
-        //update data
-        public void UpdateTransaksi(string tableName, string columnName1, string newValue, string columnName2, string value2, SqlConnection conn)
+        //update data for all
+        public void UpdateDataALL(string tableName, string columnName1, string newValue, string id, SqlConnection conn)
         {
             try
             {
-                string query = $"UPDATE {tableName} SET {columnName1} = @newValue WHERE {columnName2} = @value2";
+                string query = $"UPDATE {tableName} SET {columnName1} = @newValue WHERE {columnName1} = @id";
 
                 using (SqlCommand command = new SqlCommand(query, conn))
                 {
                     command.Parameters.AddWithValue("@newValue", newValue);
-                    command.Parameters.AddWithValue("@value2", value2);
+                    command.Parameters.AddWithValue("@id", id);
 
                     conn.Open();
                     int rowsAffected = command.ExecuteNonQuery();
@@ -1408,6 +1379,145 @@ namespace ConsoleApp6
                 {
                     conn.Close();
                 }
+            }
+        }
+        //delete data for all
+        public void DeleteDataAll(string tableName, string columnName, string value, SqlConnection conn)
+        {
+            string query = $"DELETE FROM {tableName} WHERE {columnName} = @value";
+
+            using (SqlCommand command = new SqlCommand(query, conn))
+            {
+                command.Parameters.AddWithValue("@value", value);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine($"Data dengan {columnName} = {value} berhasil dihapus.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Tidak ada data dengan {columnName} = {value}.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+
+
+
+        // not use function
+        /* func update data */
+        public void updatepadiberas(string ID_p_b, string newJenisp_b, string newJumlahp_b, SqlConnection conn)
+        {
+            try
+            {
+                string str = "UPDATE Padi_Beras SET Jenis_p_b = @newJenis, Jumlah_p_b = @newJumlah WHERE ID_p_b = @id";
+                SqlCommand cmd = new SqlCommand(str, conn);
+                cmd.Parameters.Add(new SqlParameter("@newJenis", newJenisp_b));
+                cmd.Parameters.Add(new SqlParameter("@newJumlah", newJumlahp_b));
+                cmd.Parameters.Add(new SqlParameter("@id", ID_p_b));
+                int rowsAffected = cmd.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data padi dan beras Berhasil Diperbarui");
+                }
+                else
+                {
+                    Console.WriteLine("Tidak ada data dengan ID yang sesuai");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
+        /* func update data */
+        public void updateTransaksi(string newID_Transaksi, string newJumlahbrt, string newTotaltr, SqlConnection conn)
+        {
+            try
+            {
+                string str = "UPDATE Transaksi SET Jumlah_Berat=@newjumlahbrt ,Total_Transaksi=@newtotaltr WHERE ID_Transaksi = @newid_transaksi";
+                SqlCommand cmd = new SqlCommand(str, conn);
+                cmd.Parameters.Add(new SqlParameter("@newjumlahbrt", newJumlahbrt));
+                cmd.Parameters.Add(new SqlParameter("@newtotaltr", newTotaltr));
+                cmd.Parameters.Add(new SqlParameter("@newid_transaksi", newID_Transaksi));
+                int rowsAffected = cmd.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data transaksi Berhasil Diperbarui");
+                }
+                else
+                {
+                    Console.WriteLine("Tidak ada data dengan ID yang sesuai");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+        /* func update data */
+        public void updatesuplierdist(string newid_s_d, string newNamaSuplier, string newAlamat, string newNoTelpon, SqlConnection conn)
+        {
+            try
+            {
+                string str = "UPDATE Suplier_Distributor SET Nama_Suplier=@newNamaSuplier , Alamat=@newAlamat ,No_Telpon=@newNoTelpon WHERE ID_s_d = @newid_s_d";
+                SqlCommand cmd = new SqlCommand(str, conn);
+                cmd.Parameters.Add(new SqlParameter("@newNamaSuplier", newNamaSuplier));
+                cmd.Parameters.Add(new SqlParameter("@newAlamat", newAlamat));
+                cmd.Parameters.Add(new SqlParameter("@newNoTelpon", newNoTelpon));
+                cmd.Parameters.Add(new SqlParameter("@newid_s_d", newid_s_d));
+                int rowsAffected = cmd.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data suplier/distributor Berhasil Diperbarui");
+                }
+                else
+                {
+                    Console.WriteLine("Tidak ada data dengan ID yang sesuai");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+        /* func update data */
+        public void updatedatabarang(string newID_log, string newJumlahBerat, string newTanggal, SqlConnection conn)
+        {
+            try
+            {
+                string str = "UPDATE Data_Barang SET Jumlah_Berat = @newjumlah,Tanggal = @newtanggal WHERE ID_log = @newid_log";
+                SqlCommand cmd = new SqlCommand(str, conn);
+                cmd.Parameters.Add(new SqlParameter("@newjumlah", newJumlahBerat));
+                cmd.Parameters.Add(new SqlParameter("@newtanggal", newTanggal));
+                cmd.Parameters.Add(new SqlParameter("@newid_log", newID_log));
+                int rowsAffected = cmd.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data barang Berhasil Diperbarui");
+                }
+                else
+                {
+                    Console.WriteLine("Tidak ada data dengan ID yang sesuai");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
 
