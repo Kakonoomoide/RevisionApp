@@ -182,6 +182,24 @@ namespace ConsoleApp6
                                                         {
                                                             case 'y':
                                                             case 'Y':
+                                                                Console.WriteLine("1. Jumlah berat Baru");
+                                                                Console.WriteLine("2. tanggal baru");
+                                                                Console.WriteLine("pilih yang ingin di update  (1-2: )");
+                                                                char Uvd = Convert.ToChar(Console.ReadLine());
+
+                                                                switch (Uvd)
+                                                                {
+                                                                    case '1':
+                                                                        {
+
+                                                                        }
+                                                                        break;
+                                                                    case '2':
+                                                                        {
+
+                                                                        }
+                                                                        break;
+                                                                }
                                                                 Console.WriteLine("Masukkan Jumlah berat baru (kosongkan jika tidak ingin mengubah):");
                                                                 string newJumlahBerat = Console.ReadLine();
                                                                 Console.WriteLine("masukkan tanggal dan waktu yang baru(kosongkan jika tidak ingin mengubah):");
@@ -1355,5 +1373,43 @@ namespace ConsoleApp6
             string pattern = @"^\+\d{5,14}$";
             return Regex.IsMatch(phoneNumber, pattern);
         }
+        //update data
+        public void UpdateTransaksi(string tableName, string columnName1, string newValue, string columnName2, string value2, SqlConnection conn)
+        {
+            try
+            {
+                string query = $"UPDATE {tableName} SET {columnName1} = @newValue WHERE {columnName2} = @value2";
+
+                using (SqlCommand command = new SqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@newValue", newValue);
+                    command.Parameters.AddWithValue("@value2", value2);
+
+                    conn.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Data berhasil diperbarui.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Tidak ada data yang diperbarui.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                if (conn.State != ConnectionState.Closed)
+                {
+                    conn.Close();
+                }
+            }
+        }
+
     }
 }
