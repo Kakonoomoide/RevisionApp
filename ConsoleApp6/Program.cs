@@ -121,6 +121,10 @@ namespace ConsoleApp6
                                                     Console.WriteLine("Tanggal sekarang: " + now);
                                                     try
                                                     {
+                                                        if (conn.State != ConnectionState.Closed)
+                                                        {
+                                                            conn.Close();
+                                                        }
                                                         pr.insertdatabarang(id_p_b, JumlahBerat, now, id_admin, conn);
                                                     }
                                                     catch
@@ -187,6 +191,10 @@ namespace ConsoleApp6
                                                                 Console.WriteLine("pilih yang ingin di update  (1-2: )");
                                                                 char Uvd = Convert.ToChar(Console.ReadLine());
 
+                                                                if (conn.State != ConnectionState.Closed)
+                                                                {
+                                                                    conn.Close();
+                                                                }
                                                                 switch (Uvd)
                                                                 {
                                                                     case '1':
@@ -206,11 +214,6 @@ namespace ConsoleApp6
                                                                         }
                                                                         break;
                                                                 }
-                                                                /*Console.WriteLine("Masukkan Jumlah berat baru (kosongkan jika tidak ingin mengubah):");
-                                                                string newJumlahBerat = Console.ReadLine();*/
-                                                                /*Console.WriteLine("masukkan tanggal dan waktu yang baru(kosongkan jika tidak ingin mengubah):");
-                                                                string newTanggal = Console.ReadLine*/
-                                                                //pr.updatedatabarang(newID_log, newJumlahBerat, newTanggal, conn);
                                                                 Console.WriteLine("Data dengan id " + newID_log + " Berhasil di update");
                                                                 break;
                                                             case 'n':
@@ -334,6 +337,10 @@ namespace ConsoleApp6
                                                     }
                                                     try
                                                     {
+                                                        if (conn.State != ConnectionState.Closed)
+                                                        {
+                                                            conn.Close();
+                                                        }
                                                         pr.insertTransaksi( jumlahBerat, TotalTransaksi, ID_pb, ID_sd, conn);
                                                     }
                                                     catch
@@ -406,6 +413,10 @@ namespace ConsoleApp6
                                                                 Console.WriteLine("pilih yang ingin di update  (1-2: )");
                                                                 char Uvd = Convert.ToChar(Console.ReadLine());
 
+                                                                if (conn.State != ConnectionState.Closed)
+                                                                {
+                                                                    conn.Close();
+                                                                }
                                                                 switch (Uvd)
                                                                 {
                                                                     case '1':
@@ -556,6 +567,10 @@ namespace ConsoleApp6
                                                         Console.WriteLine($"Nama suplier '{NamaSuplier}' belum ada di dalam tabel.");
                                                         try
                                                         {
+                                                            if (conn.State != ConnectionState.Closed)
+                                                            {
+                                                                conn.Close();
+                                                            }
                                                             pr.insertsuplierdist(id_s_d, NamaSuplier, Alamat, NoTelpon, conn);
                                                         }
                                                         catch (Exception ex)
@@ -610,6 +625,7 @@ namespace ConsoleApp6
                                             case '4':
                                                 {
                                                     Console.WriteLine("\n<---Update suplier distributor--->");
+                                                    pr.READsuplierdist(conn);
                                                     Console.WriteLine("masukkan ID suplier/distributor yang akan di perbarui:");
                                                     string id_s_d = Console.ReadLine();
 
@@ -628,6 +644,11 @@ namespace ConsoleApp6
                                                                 Console.WriteLine("3. No telpon suplier/distributor");
                                                                 Console.WriteLine("pilih yang ingin di update  (1-3: )");
                                                                 char Uvd = Convert.ToChar(Console.ReadLine());
+
+                                                                if (conn.State != ConnectionState.Closed)
+                                                                {
+                                                                    conn.Close();
+                                                                }
 
                                                                 switch (Uvd)
                                                                 {
@@ -773,6 +794,10 @@ namespace ConsoleApp6
                                                     {
                                                         try
                                                         {
+                                                            if (conn.State != ConnectionState.Closed)
+                                                            {
+                                                                conn.Close();
+                                                            }
                                                             pr.insertpadiberas(idp_b, Jenisp_b, Jumlahp_b, conn);
                                                         }
                                                         catch (Exception ex)
@@ -794,8 +819,8 @@ namespace ConsoleApp6
                                                     pr.READpadiberas(conn);
                                                     Console.WriteLine("Masukkan idp_b padi yang ingin di hapus:\n");
                                                     string idp_b = Console.ReadLine();
-
                                                     pr.READselectedPadiBeras(idp_b, conn);
+
                                                     try
                                                     {
                                                         Console.WriteLine("Ketik Y/y untuk hapus data, ketik N/n untuk membatalkan.");
@@ -828,7 +853,8 @@ namespace ConsoleApp6
                                                 {
                                                     string idp_b, newJenis, newJumlah;
                                                     Console.WriteLine("\n<---Update Data Padi/Beras--->");
-                                                    Console.WriteLine("masukkan ID suplier/distributor yang akan di perbarui:");
+                                                    pr.READpadiberas(conn);
+                                                    Console.WriteLine("masukkan ID Padi/Beras yang akan di perbarui:");
                                                     idp_b = Console.ReadLine();
 
                                                     pr.READselectedPadiBeras(idp_b, conn);
@@ -842,11 +868,15 @@ namespace ConsoleApp6
                                                         {
                                                             case 'Y':
 
-                                                                Console.WriteLine("1. Nama suplier/distributor");
-                                                                Console.WriteLine("2. Alamat suplier/distributor");
-                                                                Console.WriteLine("3. No telpon suplier/distributor");
-                                                                Console.WriteLine("pilih yang ingin di update  (1-3: )");
+                                                                Console.WriteLine("1. Jenis Padi/Beras baru");
+                                                                Console.WriteLine("2. Jumlah Padi/Beras baru");
+                                                                Console.WriteLine("pilih yang ingin di update  (1-2: )");
                                                                 char Uvd = Convert.ToChar(Console.ReadLine());
+
+                                                                if (conn.State != ConnectionState.Closed)
+                                                                {
+                                                                    conn.Close();
+                                                                }
 
                                                                 switch (Uvd)
                                                                 {
@@ -928,6 +958,63 @@ namespace ConsoleApp6
             }
         }
 
+        /*===== usable function =====*/
+        /*function data barang*/
+        /* func read data */
+        public void READdatabarang(SqlConnection conn)
+        {
+            SqlCommand cmd = new SqlCommand("SELECT ID_log,ID_p_b,Jumlah_Berat,Tanggal,ID_Admin FROM Data_Barang", conn);
+            SqlDataReader r = cmd.ExecuteReader();
+
+            Console.WriteLine("┌──────────┬────────┬──────────────┬────────────┬──────────┐");
+            Console.WriteLine("| ID_log   | ID_p_b | Jumlah_Berat | Tanggal    | ID_Admin |");
+            Console.WriteLine("├──────────┼────────┼──────────────┼────────────┼──────────┤");
+
+            while (r.Read())
+            {
+                Console.WriteLine($"| {r["ID_log"],-8} | {r["ID_p_b"],-6} | {r["Jumlah_Berat"],-12} | {((DateTime)r["Tanggal"]).ToString("yyyy-MM-dd"),-10} | {r["ID_Admin"],-8} |");
+            }
+
+            Console.WriteLine("└──────────┴────────┴──────────────┴────────────┴──────────┘");
+            r.Close();
+        }
+
+        /* func insert/create data */
+        public void insertdatabarang(string id_p_b, int JumlahBerat, DateTime Tanggal, string id_admin, SqlConnection conn)
+        {
+            try
+            {
+                conn.Open();
+                string str = "INSERT INTO Data_Barang (ID_p_b,Jumlah_Berat,Tanggal, ID_Admin) VALUES (@id_p_b, @jumlah,@tanggal, @idadmin)";
+                SqlCommand cmd = new SqlCommand(str, conn);
+                cmd.Parameters.Add(new SqlParameter("@id_p_b", id_p_b));
+                cmd.Parameters.Add(new SqlParameter("@jumlah", JumlahBerat));
+                cmd.Parameters.Add(new SqlParameter("@tanggal", Tanggal));
+                cmd.Parameters.Add(new SqlParameter("@idadmin", id_admin));
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Data Berhasil Ditambahkan");
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
+        /* func delete data */
+        public void deletedatabarang(string id_log, SqlConnection conn)
+        {
+            string str = "";
+            str = "DELETE Data_Barang WHERE ID_log = @id_log";
+            SqlCommand cmd = new SqlCommand(str, conn);
+            cmd.CommandType = CommandType.Text;
+
+            cmd.Parameters.Add(new SqlParameter("ID_log", id_log)); ;
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+        /* end function data barang*/
+
         /*funtion padi dan beras*/
         /* func read data */
         public void READpadiberas(SqlConnection conn)
@@ -953,6 +1040,12 @@ namespace ConsoleApp6
         {
             try
             {
+                //close connection
+                if (conn.State != ConnectionState.Closed)
+                {
+                    conn.Close();
+                }
+
                 conn.Open();
                 string str = "INSERT INTO Padi_Beras (ID_p_b,Jenis_p_b, Jumlah_p_b) VALUES (@id,@jenis, @jumlah)";
                 SqlCommand cmd = new SqlCommand(str, conn);
@@ -986,62 +1079,12 @@ namespace ConsoleApp6
             cmd.Parameters.Add(new SqlParameter("jenis", Jenisp_b)); ;
             cmd.ExecuteNonQuery();
             Console.WriteLine("Data berhasil di hapus");
+            conn.Close();
         }
 
         /* end funtion padi dan beras */
 
-        /*function data barang*/
-        /* func read data */
-        public void READdatabarang(SqlConnection conn)
-        {
-            SqlCommand cmd = new SqlCommand("SELECT ID_log,ID_p_b,Jumlah_Berat,Tanggal,ID_Admin FROM Data_Barang", conn);
-            SqlDataReader r = cmd.ExecuteReader();
-
-            Console.WriteLine("┌──────────┬────────┬──────────────┬────────────┬──────────┐");
-            Console.WriteLine("| ID_log   | ID_p_b | Jumlah_Berat | Tanggal    | ID_Admin |");
-            Console.WriteLine("├──────────┼────────┼──────────────┼────────────┼──────────┤");
-
-            while (r.Read())
-            {
-                Console.WriteLine($"| {r["ID_log"],-8} | {r["ID_p_b"],-6} | {r["Jumlah_Berat"],-12} | {((DateTime)r["Tanggal"]).ToString("yyyy-MM-dd"),-10} | {r["ID_Admin"],-8} |");
-            }
-
-            Console.WriteLine("└──────────┴────────┴──────────────┴────────────┴──────────┘");
-            r.Close();
-        }
-
-        /* func insert/create data */
-        public void insertdatabarang(string id_p_b, int JumlahBerat, DateTime Tanggal, string id_admin, SqlConnection conn)
-        {
-            try
-            {
-                string str = "INSERT INTO Data_Barang (ID_p_b,Jumlah_Berat,Tanggal, ID_Admin) VALUES (@id_p_b, @jumlah,@tanggal, @idadmin)";
-                SqlCommand cmd = new SqlCommand(str, conn);
-                cmd.Parameters.Add(new SqlParameter("@id_p_b", id_p_b));
-                cmd.Parameters.Add(new SqlParameter("@jumlah", JumlahBerat));
-                cmd.Parameters.Add(new SqlParameter("@tanggal", Tanggal));
-                cmd.Parameters.Add(new SqlParameter("@idadmin", id_admin));
-                cmd.ExecuteNonQuery();
-                Console.WriteLine("Data Berhasil Ditambahkan");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-
-        /* func delete data */
-        public void deletedatabarang(string id_log, SqlConnection conn)
-        {
-            string str = "";
-            str = "DELETE Data_Barang WHERE ID_log = @id_log";
-            SqlCommand cmd = new SqlCommand(str, conn);
-            cmd.CommandType = CommandType.Text;
-
-            cmd.Parameters.Add(new SqlParameter("ID_log", id_log)); ;
-            cmd.ExecuteNonQuery();
-        }
-        /* end function data barang*/
+        
 
         /*function suplier & distributor*/
         /* func read data */
@@ -1096,6 +1139,7 @@ namespace ConsoleApp6
             cmd.Parameters.Add(new SqlParameter("ID_s_d", id_s_d)); ;
             cmd.ExecuteNonQuery();
             Console.WriteLine("Data berhasil di hapus");
+            conn.Close();
         }
         /*end function suplier & distributor*/
 
@@ -1124,6 +1168,7 @@ namespace ConsoleApp6
         {
             try
             {
+                conn.Open();
                 string str = "INSERT INTO Transaksi (Jumlah_Berat,Total_Transaksi,ID_p_b,ID_s_d) VALUES (@jumlahbrt, @totaltr,@id_pb, @id_sd)";
                 SqlCommand cmd = new SqlCommand(str, conn);
                 cmd.Parameters.Add(new SqlParameter("@jumlahbrt", jumlahBerat));
@@ -1132,6 +1177,7 @@ namespace ConsoleApp6
                 cmd.Parameters.Add(new SqlParameter("@id_sd", ID_sd));
                 cmd.ExecuteNonQuery();
                 Console.WriteLine("Data Berhasil Ditambahkan");
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -1149,6 +1195,7 @@ namespace ConsoleApp6
             cmd.Parameters.Add(new SqlParameter("ID_Transaksi", id_Transaksi)); ;
             cmd.ExecuteNonQuery();
             Console.WriteLine("Data berhasil di hapus");
+            conn.Close();
         }
 
         
